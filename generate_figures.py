@@ -8,23 +8,38 @@
 """Minimal script for reproducing the figures of the StyleGAN paper using pre-trained generators."""
 
 import os
+# デバイス関連を操作することができるモジュールosをimport
 import pickle
+# pickleファイルを操作することができるモジュールpickleをimport
 import numpy as np
+# 行列演算をすることのできるモジュールnumpyをimport
 import PIL.Image
+# 画像を操作することのできるモジュールpillowをimport
 import dnnlib
+# 自作モジュールdnnlibをimport
 import dnnlib.tflib as tflib
+# dnnlibのなかのtflibをimport
 import config
+# 自作のファイルconfigをimport
 
 #----------------------------------------------------------------------------
 # Helpers for loading and using pre-trained generators.
+# 学習済みモデルを使うときの設定↓
 
 url_ffhq        = 'https://drive.google.com/uc?id=1MEGjdvVpUsu1jB4zrXZN7Y4kBBOzizDQ' # karras2019stylegan-ffhq-1024x1024.pkl
+# 人間の顔の訓練済みモデルのurlを変数に格納
 url_celebahq    = 'https://drive.google.com/uc?id=1MGqJl28pN4t7SAtSrPdSRJSQJqahkzUf' # karras2019stylegan-celebahq-1024x1024.pkl
+# 人間の顔の訓練済みモデルのurlを変数に格納
 url_bedrooms    = 'https://drive.google.com/uc?id=1MOSKeGF0FJcivpBI7s63V9YHloUTORiF' # karras2019stylegan-bedrooms-256x256.pkl
+# ベッドルームの訓練済みモデルのurlを変数に格納
 url_cars        = 'https://drive.google.com/uc?id=1MJ6iCfNtMIRicihwRorsM3b7mmtmK9c3' # karras2019stylegan-cars-512x384.pkl
+# 車の訓練済みモデルのurlを変数に格納
 url_cats        = 'https://drive.google.com/uc?id=1MQywl0FNt6lHu8E_EUqnRbviagS7fbiJ' # karras2019stylegan-cats-256x256.pkl
+# 猫の訓練済みモデルのurlを変数に格納
 
 synthesis_kwargs = dict(output_transform=dict(func=tflib.convert_images_to_uint8, nchw_to_nhwc=True), minibatch_size=8)
+# synthesis networkで使われる引数のための変数にsynthesis_networkに，
+# {output_transform: {func: }}
 
 _Gs_cache = dict()
 
